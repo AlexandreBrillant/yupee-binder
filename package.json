@@ -1,0 +1,32 @@
+{
+  "name": "yupee-binder",
+  "version": "1.0.0",
+  "description": "Create simple UI composants from a JSON format and synchronize it automatically",
+  "keywords": [
+    "yupee",
+    "javascript binder",
+    "javascript form",
+    "javascript mapper",
+    "javascript field",
+    "javascript interface"
+  ],
+  "homepage": "https://github.com/AlexandreBrillant/yupee-binder#readme",
+  "bugs": {
+    "url": "https://github.com/AlexandreBrillant/yupee-binder/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexandreBrillant/yupee-binder.git"
+  },
+  "license": "ISC",
+  "author": "Alexandre Brillant",
+  "type": "module",
+  "main": "yupee-binder.js",
+  "scripts": {
+    "build": "terser ./src/yupee-binder.js -o ./dist/yupee-binder.min.js",
+    "postbuild": "node --check dist/yupee-binder.min.js"
+  },
+  "dependencies": {
+    "terser": "^5.46.0"
+  }
+}
