@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<!-- We use two groups of fields -->
+
+<html>
+    <head>
+        <style type="text/css">
+            .group1, .group2 {
+                display:flex;
+                flex-direction: row;
+                padding:10px;
+            }
+
+            .group1 > div {
+                width:50%;
+                display:flex;
+                flex-direction: row;
+            }
+
+            .group2 > div {
+                width:50%;
+                display:flex;
+                flex-direction: row;
+
+            }
+
+            label {
+                font-weight: bold;
+                margin-right:10px;
+                margin-left:10px;
+            }
+
+            input {
+                flex-grow: 1;
+            }
+
+        </style>
+        <script src="../src/yupee-binder.js"></script>
+        <script>
+
+            const myData = {
+                group1: {
+                    firstName : "alexandre",
+                    lastName : "brillant"
+                },
+                group2: {
+                    message1 : "My message",
+                    message2 : "My other message"
+                }
+            }
+
+            document.addEventListener( "DOMContentLoaded", () => {
+                const container = document.querySelector( "#myForm" );
+                const myGroup1 = window.binder.createGroup( document.querySelector( "#myForm" ), myData.group1, "group1" );
+                myGroup1.createField( { label:"First name", name:"firstName" } );
+                myGroup1.createField( { label:"Last name", name:"lastName" } );
+
+                const myGroup2 = window.binder.createGroup( document.querySelector( "#myForm" ), myData.group2, "group2" );
+                myGroup2.createField( { label:"Message 1", name:"message1" } );
+                myGroup2.createField( { label:"Message 2", name:"message2" } );
+
+                myGroup1.onUpdate( () => {
+                    // Display the json result
+                    document.querySelector( "#result" ).textContent = JSON.stringify( myData );
+                } );
+                myGroup2.onUpdate( () => {
+                    // Display the json result
+                    document.querySelector( "#result" ).textContent = JSON.stringify( myData );
+                } );
+
+
+            } );
+        </script>
+    </head>
+
+    <body>
+
+        <h1>A simple form using yupee-binder</h1>
+        
+        <div id="myForm">
+
+        </div>
+
+        <p>Update a field content for displaying the JSON result</p>
+
+        <div id="result">
+
+        </div>
+
+    </body>
+
+</html>

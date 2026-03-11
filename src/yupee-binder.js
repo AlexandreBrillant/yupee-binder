@@ -33,7 +33,7 @@ SOFTWARE.
 
 ( ( $$ ) => {
 
-    class Form {
+    class FieldGroup {
 
         #root;
         #result;
@@ -42,14 +42,14 @@ SOFTWARE.
          * @param {*} container The HTML component
          * @param {*} result An optional Object for storing/reading the values
          */
-        constructor( container, result = {} ) {
-            this.#result = result
+        constructor( container, data = {}, className = "yupee-binder-group" ) {
+            this.#result = data
             this.#root = document.createElement( "DIV" );
-            this.#root.className = "yupee-binder-form";
+            this.#root.className = className;
             container.appendChild( this.#root );
         }
 
-        #buildField( { label, name, format, required, defaultValue, validator } ) {
+        #buildField( { label, name, format, required, defaultValue, validator, formatter } ) {
             const field = document.createElement( "DIV" );
             field.className = "yupee-binder-field";
             let labelField = null;
@@ -70,7 +70,7 @@ SOFTWARE.
                 ui.type = "checkbox";
                 ui.checked = defaultValue;
                 ui.addEventListener( "change", (e) => {
-                    that.#write( e.target.name, e.target.checked, validator );
+                    that.#write( e.target, e.target.name, e.target.checked, validator, formatter );
                 } );
             } else 
             if ( format == Binder.TEXT_BLOC ) {
@@ -79,7 +79,7 @@ SOFTWARE.
                 ui.name = name;
                 ui.value = defaultValue;
                 ui.addEventListener( "input", ( e ) => {
-                    that.#write( e.target.name, e.target.value, validator );
+                    that.#write( e.target, e.target.name, e.target.value, validator, formatter );
                 } );
             } else 
             if ( format == Binder.LIST ) {
@@ -99,7 +99,7 @@ SOFTWARE.
                     }
                 }
                 ui.addEventListener( "change", (e) => {
-                    that.#write( e.target.name, e.target.value, validator );
+                    that.#write( e.target, e.target.name, e.target.value, validator, formatter );
                 } );
             } else    
             // Default TEXT_LINE
@@ -111,7 +111,7 @@ SOFTWARE.
                 ui.value = defaultValue;
 
                 ui.addEventListener( "input", ( e ) => {
-                    that.#write( e.target.name, e.target.value, validator );
+                    that.#write( e.target, e.target.name, e.target.value, validator, formatter );
                 } );
             }
 
@@ -119,7 +119,7 @@ SOFTWARE.
             return { container:field, label:labelField, field:ui };
         }
 
-        createField( { label, name, format = Binder.TEXT_LINE, required = false, defaultValue, validator } ) {    
+        createField( { label, name, format = Binder.TEXT_LINE, required = false, defaultValue, validator, formatter } ) {    
             if ( typeof defaultValue == "undefined" ) {
                 // Try the current object
                 defaultValue = this.#result[ name ];
@@ -131,7 +131,8 @@ SOFTWARE.
                     this.#result[ name ] = defaultValue;
                 }
             }
-            const all = this.#buildField( { label, name, format, required, defaultValue, validator } );           
+            const all = this.#buildField( { label, name, format, required, defaultValue, validator, formatter } );
+            this.#bindingListener && this.#bindingListener( { name, ...all } );
             this.#root.appendChild( all.container );
             return all;
         }
@@ -140,16 +141,33 @@ SOFTWARE.
 
         #updateListener
 
+        /** Listener each time a value is updated */
         onUpdate(updateListener) {
             this.#updateListener=updateListener;
         }
 
-        #write( name, value, validator ) {
-            if ( !validator || ( validator && validator.validate( { name, value } ) ) ) {
-                this.#result[ name ] = value;
+        #bindingListener
+
+        /** Listener each time a field is built */
+        onBinding(bindingListener) {
+            this.#bindingListener = bindingListener;
+        }
+
+        #errorListener
+
+        /** Called each time the validator rejects a value */
+        onError(errorListener ) {
+            this.#errorListener = errorListener;
+        }
+
+        #write( field, name, value, validator, formatter ) {
+            if ( !validator || ( typeof validator == "function" && validator( value ) ) ) {
+                this.#result[ name ] = typeof formatter == "function" ? formatter( value ) : value;
                 if ( this.#updateListener ) {
                     this.#updateListener( { name, value } );
                 }
+            } else {
+                this.#errorListener && this.#errorListener( { field, name, value } );
             }
         }
     }
@@ -164,8 +182,8 @@ SOFTWARE.
         // Select
         static LIST = 3;
 
-        createForm( container ) {
-            return new Form( container );
+        createGroup( container, data, className ) {
+            return new FieldGroup( container, data, className );
         }
     }
 
@@ -174,7 +192,7 @@ SOFTWARE.
         TEXT_BLOC:Binder.TEXT_BLOC,
         BOOLEAN:Binder.BOOLEAN,
         LIST:Binder.LIST,
-        createForm:( container ) => new Binder().createForm( container )
+        createGroup:( ...args ) => new Binder().createGroup( ...args )
     }
 
 } )( typeof $$ == "undefined" ? window : $$ );

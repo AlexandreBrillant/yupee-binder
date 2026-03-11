@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<!-- We use two groups of fields -->
+
+<html>
+    <head>
+        <script src="../src/yupee-binder.js"></script>
+        <script>
+
+            const myData = {
+                name:"alexandre brillant",
+                size:200
+            }
+
+            document.addEventListener( "DOMContentLoaded", () => {
+                const container = document.querySelector( "#myForm" );
+                const myGroup = window.binder.createGroup( document.querySelector( "#myForm" ), myData );
+                myGroup.createField( { label:"Name", name:"name" } );
+                myGroup.createField( { label:"Size", name:"size", validator:(value)=>!isNaN(Number(value)), formatter:(value)=>parseInt(value) } );
+
+                myGroup.onUpdate( () => {
+                    // Display the json result
+                    document.querySelector( "#result" ).textContent = JSON.stringify( myData );
+                } );
+
+                myGroup.onError( ( { name, value } ) => {
+                    document.querySelector( "#result" ).textContent = "I don't want this value [" + value + "]";
+                } );
+
+            } );
+        </script>
+    </head>
+
+    <body>
+
+        <h1>A simple form using yupee-binder</h1>
+        
+        <div id="myForm">
+
+        </div>
+
+        <p>Update a field content for displaying the JSON result</p>
+
+        <div id="result">
+
+        </div>
+
+    </body>
+
+</html>
