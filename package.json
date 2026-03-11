@@ -23,8 +23,11 @@
   "type": "module",
   "main": "yupee-binder.js",
   "scripts": {
-    "build": "terser ./src/yupee-binder.js -o ./dist/yupee-binder.min.js",
-    "postbuild": "node --check dist/yupee-binder.min.js"
+    "build:clean": "rm -rf dist && mkdir dist",
+    "build:copy": "cp src/yupee-binder.js dist",
+    "build:minify": "terser ./src/yupee-binder.js -o ./dist/yupee-binder.min.js",
+    "build": "npm run build:clean && npm run build:copy && npm run build:minify",
+    "prebuild": "node --check src/yupee-binder.js"
   },
   "dependencies": {
     "terser": "^5.46.0"
