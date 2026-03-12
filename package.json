@@ -20,13 +20,14 @@
   },
   "license": "ISC",
   "author": "Alexandre Brillant",
-  "type": "module",
+  "type": "commonjs",
   "main": "yupee-binder.js",
   "scripts": {
     "build:clean": "rm -rf dist && mkdir dist",
     "build:copy": "cp src/yupee-binder.js dist",
-    "build:minify": "terser ./src/yupee-binder.js -o ./dist/yupee-binder.min.js",
-    "build": "npm run build:clean && npm run build:copy && npm run build:minify",
+    "build:esm" : "node tools/preprocessor.js -i src/yupee-binder.mjs -o dist/yupee-binder.mjs",
+    "build:minify": "terser ./src/yupee-binder.js -o ./dist/yupee-binder.min.js && terser ./dist/yupee-binder.mjs -o ./dist/yupee-binder.min.mjs",
+    "build": "npm run build:clean && npm run build:copy && npm run build:esm && npm run build:minify",
     "prebuild": "node --check src/yupee-binder.js"
   },
   "dependencies": {
