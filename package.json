@@ -1,13 +1,15 @@
 {
   "name": "yupee-binder",
   "version": "1.0.0",
-  "description": "Create simple UI composants from a JSON format and synchronize it automatically",
+  "description": "Create easily a group/form with a set of fields and synchronize it on-the-fly with a litteral object",
   "keywords": [
     "yupee",
     "javascript binder",
     "javascript form",
     "javascript mapper",
     "javascript field",
+    "form generator",
+    "form field creator",
     "javascript interface"
   ],
   "homepage": "https://github.com/AlexandreBrillant/yupee-binder#readme",

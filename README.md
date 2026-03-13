@@ -1,6 +1,6 @@
 # yupee-binder
 
-Yupee Binder is a module of the Yupee library. This module can also be used independently.
+Yupee Binder is a module of the [Yupee library](https://github.com/AlexandreBrillant/yupee). This module can also be used independently.
 
 It is designed to quickly create forms from a literal object. Essentially, the object's properties are automatically bound to readable/writable form fields. The object is updated in real time whenever a field is modified. This effectively converts user input into a JavaScript object.
 
