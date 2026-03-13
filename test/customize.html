@@ -31,7 +31,7 @@
             document.addEventListener( "DOMContentLoaded", () => {
                 // Build a new form and put in into the <div id='myForm'/>
                 // We use only the myData object
-                const myFields = window.binder.createGroup( document.querySelector( "#myForm" ), myData );
+                const myFields = window.binder.createGroup( {container:document.querySelector( "#myForm" ), data:myData } );
                 myFields.onBinding( ( { name, field } ) => {
                     if ( name == "lastname" ) {
                         field.style.backgroundColor = "blue";

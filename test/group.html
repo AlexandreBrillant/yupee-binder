@@ -51,11 +51,11 @@
 
             document.addEventListener( "DOMContentLoaded", () => {
                 const container = document.querySelector( "#myForm" );
-                const myGroup1 = window.binder.createGroup( document.querySelector( "#myForm" ), myData.group1, "group1" );
+                const myGroup1 = window.binder.createGroup( {container:document.querySelector( "#myForm" ), data:myData.group1, className:"group1" } );
                 myGroup1.createField( { label:"First name", name:"firstName" } );
                 myGroup1.createField( { label:"Last name", name:"lastName" } );
 
-                const myGroup2 = window.binder.createGroup( document.querySelector( "#myForm" ), myData.group2, "group2" );
+                const myGroup2 = window.binder.createGroup( {container:document.querySelector( "#myForm" ), data:myData.group2, className:"group2" } );
                 myGroup2.createField( { label:"Message 1", name:"message1" } );
                 myGroup2.createField( { label:"Message 2", name:"message2" } );
 

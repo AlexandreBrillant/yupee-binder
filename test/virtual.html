@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<!-- Basic sample for the yupee-binder.js management -->
+<!-- Virtual mode for creating a default container and put it after anywhere -->
 
 <html>
     <head>
@@ -23,29 +23,19 @@
         <script>
             document.addEventListener( "DOMContentLoaded", () => {
                 // Build a new form and put in into the <div id='myForm'/>
-                const myFields = window.binder.createGroup( { container:document.querySelector( "#myForm" ) } );
+                const myFields = window.binder.createGroup( {} );
                 
                 // Create a simple text field
                 myFields.createField( { label:"First name", name:"firstname", format:window.binder.TEXT_LINE, required:true, defaultValue:"alexandre" } );
                 myFields.createField( { label:"Last name", name:"lastname", format:window.binder.TEXT_LINE, required:true, defaultValue:"brillant" } );
                 
-                // Create a checkbox
-                myFields.createField( { label:"Great", name:"great", format:window.binder.BOOLEAN, required:true, defaultValue:true } );
-                
-                // Create a textarea
-                // We update the default rows getting the field result part
-                const { field } = myFields.createField( { label:"Your message", name:"message", format:window.binder.TEXT_BLOC, required:true, defaultValue:"nice message" } );
-                field.rows = 4;
-
-                // Create a selection
-                myFields.createField( { label:"Choose a value", name:"myvalue", format:window.binder.LIST, required:true, defaultValue:["red","green","blue"] });
-
                 // Get an update event each time the form is updated
                 myFields.onUpdate( () => {
                     // Display the json result
                     document.querySelector( "#result" ).textContent = JSON.stringify( myFields.result() );
                 } );
 
+                document.getElementById( "myForm" ).appendChild( myFields.container() );
             } );
         </script>
     </head>

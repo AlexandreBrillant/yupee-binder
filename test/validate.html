@@ -14,7 +14,7 @@
 
             document.addEventListener( "DOMContentLoaded", () => {
                 const container = document.querySelector( "#myForm" );
-                const myGroup = window.binder.createGroup( document.querySelector( "#myForm" ), myData );
+                const myGroup = window.binder.createGroup( {container:document.querySelector( "#myForm" ), data:myData} );
                 myGroup.createField( { label:"Name", name:"name" } );
                 myGroup.createField( { label:"Size", name:"size", validator:(value)=>!isNaN(Number(value)), formatter:(value)=>parseInt(value) } );
 

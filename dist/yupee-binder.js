@@ -42,12 +42,24 @@ SOFTWARE.
          * @param {*} container The HTML component
          * @param {*} result An optional Object for storing/reading the values
          */
-        constructor( container, data = {}, className = "yupee-binder-group" ) {
-            this.#result = data
+        constructor( { container, data, className } ) {
+            this.#result = data || {};
             this.#root = document.createElement( "DIV" );
-            this.#root.className = className;
-            container.appendChild( this.#root );
+            this.#root.className = className || "yupee-binder-group";
+
+            if ( container instanceof Node )
+                container.appendChild( this.#root );
         }
+
+        /** Return the container for the sef of fields */
+        container() {
+            return this.#root;
+        }
+
+        /** Return the objet result with all the data */
+        result() { 
+            return this.#result 
+        };
 
         #buildField( { label, name, format, required, defaultValue, validator, formatter } ) {
             const field = document.createElement( "DIV" );
@@ -137,7 +149,7 @@ SOFTWARE.
             return all;
         }
 
-        result() { return this.#result };
+
 
         #updateListener
 
@@ -160,9 +172,17 @@ SOFTWARE.
             this.#errorListener = errorListener;
         }
 
+        #modified = false;
+
+        /** @return true is data field is updated */
+        isModified() {
+            return this.#modified;
+        }
+
         #write( field, name, value, validator, formatter ) {
             if ( !validator || ( typeof validator == "function" && validator( value ) ) ) {
                 this.#result[ name ] = typeof formatter == "function" ? formatter( value ) : value;
+                this.#modified = true;
                 if ( this.#updateListener ) {
                     this.#updateListener( { name, value } );
                 }
@@ -182,8 +202,8 @@ SOFTWARE.
         // Select
         static LIST = 3;
 
-        createGroup( container, data, className ) {
-            return new FieldGroup( container, data, className );
+        createGroup( { container, data, className } ) {
+            return new FieldGroup( { container, data, className } );
         }
     }
 
