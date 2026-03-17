@@ -143,6 +143,7 @@ SOFTWARE.
                     this.#result[ name ] = defaultValue;
                 }
             }
+            ( typeof defaultValue == "undefined") && ( defaultValue = null );
             const all = this.#buildField( { label, name, format, required, defaultValue, validator, formatter } );
             this.#bindingListener && this.#bindingListener( { name, ...all } );
             this.#root.appendChild( all.container );
