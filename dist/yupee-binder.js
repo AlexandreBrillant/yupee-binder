@@ -137,12 +137,25 @@ SOFTWARE.
                 defaultValue = this.#result[ name ];
             }
             if ( defaultValue ) {
+                // List case
                 if ( Array.isArray( defaultValue ) && defaultValue.length > 0 ) {
-                    this.#result[ name ] = defaultValue[ 0 ];
+                    if ( name in this.#result ) {
+                        const valueIndex = defaultValue.findIndex( ( value ) => value == this.#result[ name ] );
+                        if ( valueIndex > -1 ) {
+                            // Swap with the 0
+                            const tmp = defaultValue[ 0 ];
+                            defaultValue[ 0 ] = defaultValue[ valueIndex ];
+                            defaultValue[ valueIndex ] = tmp;
+                        } else {
+                            // Ignore the current value can't find it inside the values list ?
+                        }
+                    } else
+                        this.#result[ name ] = defaultValue[ 0 ];
                 } else {
-                    this.#result[ name ] = defaultValue;
+                    defaultValue = this.#result[ name ] || defaultValue;
                 }
             }
+
             ( typeof defaultValue == "undefined") && ( defaultValue = null );
             const all = this.#buildField( { label, name, format, required, defaultValue, validator, formatter } );
             this.#bindingListener && this.#bindingListener( { name, ...all } );

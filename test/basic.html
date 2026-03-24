@@ -22,8 +22,14 @@
         <script src="../src/yupee-binder.js"></script>
         <script>
             document.addEventListener( "DOMContentLoaded", () => {
+
+                const data = {
+                    firstname : "alexandro",
+                    myvalue : "blue"
+                };
+
                 // Build a new form and put in into the <div id='myForm'/>
-                const myFields = window.binder.createGroup( { container:document.querySelector( "#myForm" ) } );
+                const myFields = window.binder.createGroup( { container:document.querySelector( "#myForm" ), data } );
                 
                 // Create a simple text field
                 myFields.createField( { label:"First name", name:"firstname", format:window.binder.TEXT_LINE, required:true, defaultValue:"alexandre" } );
