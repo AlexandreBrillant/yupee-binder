@@ -1,6 +1,6 @@
 {
   "name": "yupee-binder",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Create easily a group/form with a set of fields and synchronize it on-the-fly with a litteral object",
   "keywords": [
     "yupee",
@@ -22,18 +22,19 @@
   },
   "license": "ISC",
   "author": "Alexandre Brillant",
-  "type": "commonjs",
+  "type": "module",
   "main": "yupee-binder.js",
   "scripts": {
     "build:clean": "rm -rf dist && mkdir dist",
     "build:copy": "cp src/yupee-binder.js dist",
-    "build:esm" : "node tools/preprocessor.js -i src/yupee-binder.mjs -o dist/yupee-binder.mjs",
+    "build:esm": "node tools/preprocessor.js -i src/yupee-binder.mjs -o dist/yupee-binder.mjs",
     "build:minify": "terser ./src/yupee-binder.js -o ./dist/yupee-binder.min.js && terser ./dist/yupee-binder.mjs -o ./dist/yupee-binder.min.mjs",
     "build": "npm run build:clean && npm run build:copy && npm run build:esm && npm run build:minify",
     "prebuild": "node --check src/yupee-binder.js",
-    "test": "chromium test/basic.html && chromium test/customize.html && chromium test/group.html && chromium test/virtual.html"
+    "test": "chromium test/basic.html && chromium test/customize.html && chromium test/group.html && chromium test/virtual.html",
+    "test:factory": "chromium test/factory.html"
   },
-  "dependencies": {
-    "terser": "^5.46.0"
+  "devDependencies": {
+    "terser": "^5.46.1"
   }
 }

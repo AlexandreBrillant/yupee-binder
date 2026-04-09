@@ -421,5 +421,68 @@ In the virtual mode, you needn't to specify a container. Just use an empty objec
 
 ```
 
+## Factory
+
+When creating a group, you may specify a factory. A factory is a way to have a different UI component for a specific name.
+
+A factory is a collection of object with the following properties :
+
+- ui : A function returning the DOM node field
+- addEventListener : A function called automatically for receiving event that the ui field has been updated
+
+In this example, we replace the "message" field by an input field with a button at the end. When clicking on the button, the field is updated.
+
+![Screen 5](images/image5.png)
+
+```javascript
+const factory = {
+    message: {
+        ui: function( { name, format, required, defaultValue } ) {
+            const div = document.createElement( "div" );
+            div.style.width="100%";
+            const field = document.createElement( "input" );
+            field.style.width="90%";
+            field.name = name;
+            
+            field.required = required;
+            field.value = defaultValue || "";
+            div.appendChild( field );
+            const button = document.createElement( "button" );
+            button.innerText = "...";
+            button.addEventListener( "click",
+                () => {
+                    field.value = "bye bye world !";
+
+                    const event = new Event('input', {
+                        bubbles: true,
+                        cancelable: true
+                    });
+
+                    field.dispatchEvent( event );
+                } );
+            div.appendChild( button );
+            this.field = field;
+            return div;
+        },
+        addEventListener: function( callback ) {
+            this.field.addEventListener( "input", callback );
+        }
+    }
+}
+
+// Build a new form and put in into the <div id='myForm'/>
+const myFields = window.binder.createGroup( { container:document.querySelector( "#myForm" ), data, factory } );
+
+// Create a simple text field
+myFields.createField( { label:"First name", name:"firstname", format:window.binder.TEXT_LINE, required:true, defaultValue:"alexandre" } );
+myFields.createField( { label:"message", name:"message", format:window.binder.TEXT_LINE, required:true, defaultValue:"brillant" } );
+
+// Get an update event each time the form is updated
+myFields.onUpdate( () => {
+    // Display the json result
+    document.querySelector( "#result" ).textContent = JSON.stringify( myFields.result() );
+} );
+```
+
 
 (c) 2026 Alexandre Brillant

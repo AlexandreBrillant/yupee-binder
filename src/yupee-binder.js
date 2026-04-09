@@ -37,12 +37,17 @@ SOFTWARE.
 
         #root;
         #result;
+        #factory;
 
         /**
-         * @param {*} container The HTML component
-         * @param {*} result An optional Object for storing/reading the values
+         * @param container The HTML component
+         * @param data null or the final object data 
+         * @param className Add a className to the whole container of the fields
+         * @param factory Option to create custom field by a name.
+         * @param result An optional Object for storing/reading the values
          */
-        constructor( { container, data, className } ) {
+        constructor( { container, data, className, factory } ) {
+            this.#factory = factory;
             this.#result = data || {};
             this.#root = document.createElement( "DIV" );
             this.#root.className = className || "yupee-binder-group";
@@ -75,6 +80,13 @@ SOFTWARE.
             let ui = null;
             const that = this;
 
+            if ( this.#factory && name in this.#factory ) {
+                const nameField = this.#factory[ name ];
+                ui = nameField.ui( { name, format, required, defaultValue } );
+                nameField.addEventListener( (e) => {
+                    that.#write( e.target, e.target.name, e.target.value, validator, formatter );                    
+                } );
+            } else            
             if ( format == Binder.BOOLEAN ) {
                 ui = document.createElement( "INPUT" );
                 ui.required = required;
@@ -216,8 +228,8 @@ SOFTWARE.
         // Select
         static LIST = 3;
 
-        createGroup( { container, data, className } ) {
-            return new FieldGroup( { container, data, className } );
+        createGroup( { container, data, className, factory } ) {
+            return new FieldGroup( { container, data, className, factory } );
         }
     }
 

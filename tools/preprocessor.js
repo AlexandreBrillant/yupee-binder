@@ -4,11 +4,11 @@
  * @author Alexandre Brillant 
  */
 
-const fs = require('fs/promises');
-const path = require('path');
+import { readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
 
-mainFile = "main.js";
-outputFile = "test.js"
+let mainFile = "main.js";
+let outputFile = "test.js"
 const argv = process.argv;
 let addit = "";
 
@@ -31,37 +31,29 @@ addit && ( addit = "\n" + addit );
 
 const files = {};
 
-async function processMain() {
-    const mainContent = await fs.readFile( mainFile, 'utf8');
+function processMain() {
+    let mainContent = readFileSync( mainFile, 'utf8');
     const mustread = [];
 
     mainContent.replace( /\/\/#include\s+"([\w\.-]+)"/gi,     
         ( match, filename ) => mustread.push( filename ) );
     
     for ( const file of mustread ) {
-        await readFile( file );
+        readFile( file );
     }
 
-    return mainContent.replace( /\/\/#include\s+"([\w\.-]+)"/gi, 
+    mainContent = mainContent.replace( /\/\/#include\s+"([\w\.-]+)"/gi,
         ( match, filename ) => {
             return files[ filename ];
         }
     )
+    writeFileSync( outputFile, mainContent, 'utf8');
 }
 
-async function readFile( filename ) {
+function readFile( filename ) {
     const file = path.dirname( mainFile ) + "/" + filename;
-    const content = await fs.readFile( file, 'utf8');
+    const content = readFileSync( file, 'utf8');
     files[ filename ] = content.replace( /\/\/#start(.*)\/\/#end/gs, "" );
 }
 
-async function writeMain( content ) {
-    console.log( "Write to " + outputFile );
-    await fs.writeFile( outputFile, content, 'utf8');
-}
-
-processMain().then(
-    ( fileContent ) => {
-        writeMain( fileContent + addit );
-} );
-
+processMain();
