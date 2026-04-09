@@ -31,7 +31,7 @@
     "build:minify": "terser ./src/yupee-binder.js -o ./dist/yupee-binder.min.js && terser ./dist/yupee-binder.mjs -o ./dist/yupee-binder.min.mjs",
     "build": "npm run build:clean && npm run build:copy && npm run build:esm && npm run build:minify",
     "prebuild": "node --check src/yupee-binder.js",
-    "test": "chromium test/basic.html && chromium test/customize.html && chromium test/group.html && chromium test/virtual.html",
+    "test": "chromium test/basic.html && chromium test/customize.html && chromium test/group.html && chromium test/virtual.html && chromium test/factory.html",
     "test:factory": "chromium test/factory.html"
   },
   "devDependencies": {
